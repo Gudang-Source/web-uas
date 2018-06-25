@@ -37,6 +37,12 @@ class Transaksi_model extends CI_model {
 		return $result;
 	}
 	
+	public function get_transaksi_by_pelanggan($id_pelanggan) {		
+		$result_set = $this->db->get_where($this->table, compact('id_pelanggan'));
+		$results = $result_set->result_array();		
+		return $results;
+	}
+	
 	public function get_detail_transaksi($id_sewa) {
 		$this->db->select(
 					'dtl.*,					

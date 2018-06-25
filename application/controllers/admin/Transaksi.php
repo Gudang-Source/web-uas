@@ -21,11 +21,26 @@ class Transaksi extends CI_controller {
 		
     }
 	
-	public function pelanggan($id) {
+	public function pelanggan($id_pelanggan) {
 		
-		if(!$id) {
+		if(!$id_pelanggan) {
 			redirect('admin/transaksi', 'refresh');
 		}
+		
+		$pelanggan = $this->Pelanggan->get_pelanggan_by_id($id_pelanggan);
+		if(empty($pelanggan)) {
+			$this->session->set_flashdata('alert', alert_error('Tidak diketemukan adanya data transaksi'));
+			redirect('admin/transaksi', 'refresh');	
+		}
+		
+		$transaksis = $this->Transaksi->get_transaksi_by_pelanggan($id_pelanggan);
+		
+		$page_title = 'Detail Transaksi';
+		$active_nav = 'transaksi';
+		
+		$this->load->view('back/before', compact('page_title', 'active_nav', 'active_sub_nav'));
+		$this->load->view('back/transaksi/by_pelanggan', compact('pelanggan', 'transaksis'));
+		$this->load->view('back/after');
 		
     }
 	
