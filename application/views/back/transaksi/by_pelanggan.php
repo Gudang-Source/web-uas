@@ -84,7 +84,14 @@
 								<?php endforeach; endif; ?>
 							</tbody>							
 							
-						</table>						
+						</table>
+
+						<p>
+							<a href="<?php echo site_url('admin/transaksi/add/'.$pelanggan->id); ?>" class="btn bg-light-green waves-effect">
+								<i class="material-icons">add</i>
+								<span>Tambah Transaksi</span>
+							</a>
+						</p>
 				
 					</div>
 					</div>		
