@@ -67,8 +67,13 @@
 						<li class="<?php the_nav_class($active_sub_nav, 'add_produk'); ?>"><a href="<?php echo site_url('admin/produk/add'); ?>">Tambah Produk</a></li>
 					</ul>
 				</li>
-
 				
+				<li class="<?php the_nav_class($active_nav, 'transaksi'); ?>">
+					<a href="#">
+						<i class="material-icons">monetization_on</i>
+						<span>Transaksi Sewa</span>
+					</a>					
+				</li>				
 				
 				<li class="<?php the_nav_class($active_nav, 'data_master'); ?>">
 					<a href="javascript:void(0);" class="menu-toggle">

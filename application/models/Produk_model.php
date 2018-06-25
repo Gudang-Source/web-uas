@@ -156,4 +156,30 @@ class Produk_model extends CI_model {
 		return $this->db->delete($this->table, compact('id'));		
 	}
 	
+	public function produk_disewa($id, $qty) {
+		$this->db->set('ready_stock', 'ready_stock - '.$qty, FALSE);
+		$this->db->where('id', $id);
+		$this->db->update($this->table); 
+	}
+	
+	public function produk_dikembalikan($id, $qty) {
+		$this->db->set('ready_stock', 'ready_stock + '.$qty, FALSE);
+		$this->db->where('id', $id);
+		$this->db->update($this->table); 
+	}
+	
+	public function update_ready_stock() {
+		$this->load->model('Transaksi_model', 'Transaksi');
+		$produks = $this->get_all();
+		foreach($produks as $produk) {
+			$total_qty = $this->Transaksi->get_all_qty_by_produk($produk['id']);			
+			$ready_stock = $produk['total_stock'] - $total_qty;
+			$this->db->set('ready_stock', $ready_stock);
+			$this->db->where('id', $produk['id']);
+			$this->db->update($this->table); 			
+		}
+		
+		
+	}
+	
 }

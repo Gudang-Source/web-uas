@@ -27,6 +27,7 @@
 								<th>ALAMAT</th>
 								<th>NO. HP</th>
 								<th>EMAIL</th>
+								<th>SEWA</th>
 								<th width="90px">AKSI</th>
 							</tr>
 						</thead>
@@ -39,6 +40,7 @@
 									<td><?php echo $pelanggan['alamat']; ?></td>
 									<td><?php echo $pelanggan['no_hp']; ?></td>
 									<td><?php echo $pelanggan['email']; ?></td>
+									<td><a href="<?php echo site_url('admin/transaksi/pelanggan/'.$pelanggan['id']); ?>" class="btn bg-purple waves-effect">SEWA</a></td>
 									<td>
 										<a href="<?php echo site_url('admin/pelanggan/edit/'.$pelanggan['id']); ?>" title="Edit"><i class="material-icons font-20">edit</i></a>
 										&nbsp;
