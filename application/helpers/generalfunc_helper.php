@@ -61,3 +61,27 @@ function the_cat_cb($cats, $checked_data = array(), $field_name = 'default', $le
 	endif;	
 	
 }
+
+function bulma_navbar_menus($cats) {
+	foreach($cats as $cat):
+		
+		if(isset($cat['sub']) && !empty($cat['sub'])):
+		?>
+		<div class="navbar-item has-dropdown is-hoverable">
+			<a class="navbar-link" href="<?php echo site_url('cat/'.$cat['id']); ?>"><?php echo $cat['nama_kategori']; ?></a>
+			<div class="navbar-dropdown is-boxed">
+				<?php foreach($cat['sub'] as $sub): ?>
+					<a class="navbar-item" href="<?php echo site_url('cat/'.$sub['id']); ?>"><?php echo $sub['nama_kategori']; ?></a>
+				<?php endforeach; ?>
+			</div>
+		</div>
+		<?php
+		else:
+		?>
+			<a class="navbar-item" href="<?php echo site_url('cat/'.$cat['id']); ?>"><?php echo $cat['nama_kategori']; ?></a>
+		<?php
+		endif;
+	
+	
+	endforeach;
+}

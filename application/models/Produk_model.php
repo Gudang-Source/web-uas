@@ -69,7 +69,24 @@ class Produk_model extends CI_model {
 		$this->db->order_by('prd.nama_produk', 'ASC');
 		$result_set = $this->db->get();		
 		return $result_set->result_array();
-	}	
+	}
+	
+	public function get_product_by_cat($cat_id) {
+		
+		$this->db->select(
+					'prd.*,					
+					GROUP_CONCAT(cat.id) AS id_cats'
+				);
+		$this->db->from($this->table.' prd');
+		$this->db->join($this->table_produk_to_cat.' p2c', 'prd.id = p2c.id_produk', 'left');		
+		$this->db->join($this->table_cat.' cat', 'cat.id = p2c.id_kategori', 'left');		
+		$this->db->group_by('prd.id');
+		$this->db->where('p2c.id_kategori', $cat_id);
+		$result_set = $this->db->get();
+		
+		return $result_set->result_array();	
+		
+	}
 	
 	
 	public function add_new() {
@@ -101,6 +118,22 @@ class Produk_model extends CI_model {
 		$this->db->select(
 					'prd.*,					
 					GROUP_CONCAT(cat.id) AS id_cats'
+				);
+		$this->db->from($this->table.' prd');
+		$this->db->join($this->table_produk_to_cat.' p2c', 'prd.id = p2c.id_produk', 'left');		
+		$this->db->join($this->table_cat.' cat', 'cat.id = p2c.id_kategori', 'left');		
+		$this->db->group_by('prd.id');
+		$this->db->where('prd.id', $id);
+		$result_set = $this->db->get();
+		
+		return $result_set->row();		
+	}
+	
+	public function get_by_id_with_catname($id) {
+
+		$this->db->select(
+					'prd.*,					
+					GROUP_CONCAT(cat.nama_kategori SEPARATOR \', \') AS categories'
 				);
 		$this->db->from($this->table.' prd');
 		$this->db->join($this->table_produk_to_cat.' p2c', 'prd.id = p2c.id_produk', 'left');		
