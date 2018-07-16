@@ -26,7 +26,7 @@
 
     <!-- Custom Js -->
     <script src="<?php echo base_url('assets/back/js/admin.js'); ?>"></script>
-	<script src="<?php echo base_url('assets/back/js/pages/forms/editors.js'); ?>"></script>
+	<?php $this->load->view('back/template-parts/tinymce'); ?>
 
 </body>
 
