@@ -39,7 +39,24 @@ class Transaksi_model extends CI_model {
 	
 	public function get_transaksi_by_pelanggan($id_pelanggan) {		
 		$result_set = $this->db->get_where($this->table, compact('id_pelanggan'));
-		$results = $result_set->result_array();		
+		$temp_results = $result_set->result_array();
+		$results = array();
+		if(!empty($temp_results)): foreach($temp_results as $i => $res):
+			
+			$results[$i] = $res;
+			if($res['dikembalikan']) {
+				$results[$i]['status'] = 'Sudah Dikembalikan';				
+			} else {
+				$results[$i]['status'] = 'Belum Dikembalikan';				
+				$terlambat = $this->get_keterlambatan($res['id']);
+				if($terlambat > 0) {
+					$results[$i]['status'] .= '<br><strong class="col-pink">Terlambat '.$terlambat.' hari!</strong>';
+					$results[$i]['denda'] = $this->update_denda_by_id($res['id']);
+				}
+			}
+			
+		endforeach; endif;
+		
 		return $results;
 	}
 	
@@ -59,6 +76,31 @@ class Transaksi_model extends CI_model {
 		$transaksi = $this->get_transaksi($id);
 		$diff = date_diff(date_create($transaksi['tgl_kembali']), date_create($transaksi['tgl_sewa']));
 		return $diff->days;
+	}
+	
+	public function get_keterlambatan($id) {
+		$transaksi = $this->get_transaksi($id);
+		$diff = date_diff(date_create($transaksi['tgl_kembali']), date_create(date('Y-m-d')));
+		return $diff->format("%r%a");
+	}
+	
+	public function update_denda_by_id($id) {
+		$transaksi = $this->get_transaksi($id);
+		$terlambat = $this->get_keterlambatan($id);
+		$denda = 0;
+		if($terlambat > 0) {
+			$denda = $terlambat * $transaksi['biaya_per_hari'];
+			$this->db->set('denda', $denda);
+			$this->db->where('id', $id);
+			$this->db->update($this->table); 
+		}
+		return $denda;
+	}
+	
+	public function kembalikan_sewa($id) {
+		$this->db->set('dikembalikan', 1);
+		$this->db->where('id', $id);
+		$this->db->update($this->table); 
 	}
 	
 
@@ -179,6 +221,13 @@ class Transaksi_model extends CI_model {
 	public function del_item($id, $id_sewa) {
 		$result = $this->db->delete($this->table_detail_sewa, compact('id'));
 		$this->update_biaya_total($id_sewa);
+		$this->load->model('Produk_model', 'Produk');
+		$this->Produk->update_ready_stock();
+		return $result;
+	}
+	
+	public function del_transaksi($id) {
+		$result = $this->db->delete($this->table, compact('id'));
 		$this->load->model('Produk_model', 'Produk');
 		$this->Produk->update_ready_stock();
 		return $result;

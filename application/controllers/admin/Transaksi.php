@@ -66,6 +66,21 @@ class Transaksi extends CI_controller {
 		
 	}
 	
+	public function kembalikan($id_transaksi) {	
+		if(!$id_transaksi) {
+			redirect('admin/transaksi', 'refresh');
+		}
+		$transaksi = $this->Transaksi->get_transaksi($id_transaksi);
+		if(empty($transaksi)) {
+			$this->session->set_flashdata('alert', alert_error('Tidak diketemukan adanya data transaksi'));
+			redirect('admin/transaksi', 'refresh');	
+		}
+		
+		$this->Transaksi->kembalikan_sewa($id_transaksi);
+		$this->session->set_flashdata('alert', alert_success('Persewaan sudah dikembalikan'));
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+	
 	public function add($id_pelanggan) {		
 		
 		if(!$id_pelanggan) {
@@ -204,6 +219,32 @@ class Transaksi extends CI_controller {
 		}
 		
 		redirect('admin/transaksi/detail/'.$id_transaksi, 'refresh');
+		
+	}
+	
+	public function del($id_transaksi, $id_pelanggan = NULL) {
+		if(!$id_transaksi) {
+			redirect('admin/transaksi', 'refresh');
+		}
+		
+		$transaksi = $this->Transaksi->get_transaksi($id_transaksi);
+		if(empty($transaksi)) {
+			$this->session->set_flashdata('alert', alert_error('Tidak diketemukan adanya data transaksi'));
+			redirect('admin/transaksi', 'refresh');	
+		}
+		$result = $this->Transaksi->del_transaksi($id_transaksi);
+		
+		if($result) {
+			$this->session->set_flashdata('alert', alert_success('Transaksi telah sukses dihapus'));
+		} else {
+			$this->session->set_flashdata('alert', alert_success('Transaksi ternyata gagal dihapus'));
+		}		
+		
+		if(!$id_pelanggan) {
+			redirect('admin/transaksi', 'refresh');
+		} else {
+			redirect('admin/transaksi/pelanggan/'.$transaksi['id_pelanggan'], 'refresh');
+		}
 		
 	}
 

@@ -85,3 +85,10 @@ function bulma_navbar_menus($cats) {
 	
 	endforeach;
 }
+
+function format_angka($angka) {
+	return number_format($angka,0,",",".");
+}
+function format_rupiah($angka) {
+	return 'Rp. '.format_angka($angka);
+}

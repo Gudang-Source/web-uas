@@ -59,12 +59,13 @@
 							
 							<thead>
 								<tr>
-									<th>ID Transaksi</th>
+									<th>ID</th>
 									<th>Tanggal Sewa</th>
 									<th>Tanggal Kembali</th>
 									<th>Biaya Total</th>
 									<th>Status</th>
-									<th>Detail</th>
+									<th>Denda</th>
+									<th>Action</th>
 								</tr>				
 							</thead>
 							
@@ -74,11 +75,20 @@
 									<td><?php echo $sewa['id']; ?></td>
 									<td><?php echo $sewa['tgl_sewa']; ?></td>
 									<td><?php echo $sewa['tgl_kembali']; ?></td>
-									<td><?php echo $sewa['biaya_total']; ?></td>
-									<td><?php echo $sewa['dikembalikan'] ? 'Sudah Dikembalikan' : 'Belum Dikembalikan'; ?></td>
-									<td>
-										<a href="<?php echo site_url('admin/transaksi/detail/'.$sewa['id']); ?>" class="btn bg-light-green waves-effect">Detail</a>
-											
+									<td><?php echo format_rupiah($sewa['biaya_total']); ?></td>
+									<td><?php echo $sewa['status'];	?>
+									</td>
+									<td><?php echo format_rupiah($sewa['denda']); ?></td>
+									<td>										
+										<?php if(!$sewa['dikembalikan']): ?>											
+											<a href="<?php echo site_url('admin/transaksi/kembalikan/'.$sewa['id']); ?>" class="btn bg-light-green waves-effect" style="margin-bottom: 5px;">Kembalikan Peminjaman</a>											
+											<br>
+										<?php endif; ?>
+										<a href="<?php echo site_url('admin/transaksi/detail/'.$sewa['id']); ?>" class="btn bg-blue waves-effect">Detail Transaksi</a>
+										<?php if($sewa['dikembalikan']): ?>
+											<br>
+											<a href="<?php echo site_url('admin/transaksi/del/'.$sewa['id'].'/'.$sewa['id_pelanggan']); ?>" class="btn bg-red waves-effect confirm-hapus" style="margin-top: 5px;">Hapus Transaksi</a>
+										<?php endif; ?>
 									</td>
 								</tr>
 								<?php endforeach; endif; ?>
