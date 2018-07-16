@@ -28,6 +28,9 @@
     <!-- Animation Css -->
     <link href="<?php echo base_url('assets/back/plugins/animate-css/animate.css'); ?>" rel="stylesheet" />
 	
+	 <!-- Bootstrap Material Datetime Picker Css -->
+    <link href="<?php echo base_url('assets/back/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css'); ?>" rel="stylesheet" />
+	
     <link href="<?php echo base_url('assets/back/plugins/sweetalert/sweetalert.css'); ?>" rel="stylesheet" />
 	
 	<!-- Bootstrap Select Css -->

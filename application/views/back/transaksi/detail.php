@@ -45,7 +45,7 @@
 									<td><?php echo $pelanggan->email; ?></td>
 								</tr>
 							</tbody>
-						</table>
+						</table>						
 					</div>
 					</div>
 					
@@ -66,19 +66,30 @@
 									<td><?php echo $transaksi['tgl_sewa']; ?></td>
 								</tr>
 								<tr>
-									<th>Tanggal Kembali</th>
-									<td><?php echo $transaksi['tgl_kembali']; ?></td>
+									<th>Jadwal Dikembalikan</th>
+									<td><?php echo $transaksi['jadwal_kembali']; ?></td>
 								</tr>
 								<tr>
 									<th>Biaya Total</th>
-									<td><?php echo $transaksi['biaya_total']; ?></td>
+									<td><?php echo format_rupiah($transaksi['biaya_total']); ?></td>
 								</tr>
 								<tr>
 									<th>Status Sewa</th>
-									<td><?php echo $transaksi['dikembalikan'] ? 'Sudah Dikembalikan' : 'Belum Dikembalikan'; ?></td>
+									<td><?php echo $transaksi['status']; ?></td>
+								</tr>
+								<tr>
+									<th>Denda</th>
+									<td><?php echo format_rupiah($transaksi['denda']); ?></td>
 								</tr>								
 							</tbody>
-						</table>						
+						</table>
+
+						<p>
+							<a href="<?php echo site_url('admin/transaksi/edit/'.$transaksi['id']); ?>" class="btn bg-light-green waves-effect">
+								<i class="material-icons">edit</i>
+								<span>Edit Transaksi</span>
+							</a>
+						</p>
 				
 					</div>
 					</div>
@@ -125,14 +136,23 @@
 									<th></th>
 								</tr>
 							</tbody>
-						</table>
-							
-						<p>
-							<a href="<?php echo site_url('admin/transaksi/add_item/'.$transaksi['id']); ?>" class="btn bg-light-green waves-effect">
-								<i class="material-icons">add</i>
-								<span>Tambah Item</span>
-							</a>
-						</p>
+						</table>				
+						
+						
+						<?php if(!$transaksi['dikembalikan']): ?>
+							<p>							
+								<a href="<?php echo site_url('admin/transaksi/kembalikan/'.$transaksi['id']); ?>" class="btn bg-blue waves-effect">
+									<i class="material-icons">settings_backup_restore</i>
+									<span>Kembalikan Peminjaman</span>
+								</a>
+							</p>
+							<p>
+								<a href="<?php echo site_url('admin/transaksi/add_item/'.$transaksi['id']); ?>" class="btn bg-light-green waves-effect">
+									<i class="material-icons">add</i>
+									<span>Tambah Item</span>
+								</a>
+							</p>
+						<?php endif; ?>	
 				
 					</div>
 					</div>		

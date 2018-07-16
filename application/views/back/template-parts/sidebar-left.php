@@ -69,7 +69,7 @@
 				</li>
 				
 				<li class="<?php the_nav_class($active_nav, 'transaksi'); ?>">
-					<a href="#">
+					<a href="<?php echo site_url('admin/transaksi'); ?>">
 						<i class="material-icons">monetization_on</i>
 						<span>Transaksi Sewa</span>
 					</a>					

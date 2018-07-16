@@ -17,6 +17,12 @@
   
 	<!-- TinyMCE -->
     <script src="<?php echo base_url('assets/back/plugins/tinymce/tinymce.js'); ?>"></script>
+	
+	 <!-- Moment Plugin Js -->
+    <script src="<?php echo base_url('assets/back/plugins/momentjs/moment.js'); ?>"></script>
+	
+	<!-- Bootstrap Material Datetime Picker Plugin Js -->
+    <script src="<?php echo base_url('assets/back/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js'); ?>"></script>
 
     <!-- Custom Js -->
     <script src="<?php echo base_url('assets/back/js/admin.js'); ?>"></script>

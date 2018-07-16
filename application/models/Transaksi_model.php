@@ -9,7 +9,7 @@ class Transaksi_model extends CI_model {
 	
 	public function get_validation_config() {
 		$validation_cfg = array(			
-			array(
+			'id_produk' => array(
 				'field' => 'id_produk',
 				'label' => 'Produk',
 				'rules' => 'trim|required|xss_clean|is_natural_no_zero',					
@@ -19,7 +19,7 @@ class Transaksi_model extends CI_model {
 				'label' => 'Lama Sewa',
 				'rules' => 'trim|xss_clean|required|is_natural_no_zero',					
 			),
-			array(
+			'qty' => array(
 				'field' => 'qty',
 				'label' => 'Kuantitas',
 				'rules' => 'trim|xss_clean|required|is_natural_no_zero',					
@@ -32,18 +32,63 @@ class Transaksi_model extends CI_model {
 		$result_set = $this->db->get_where($this->table, compact('id'));
 		$result = $result_set->row_array();
 		if(!empty($result)) {
-			$result = array_merge($result, array('items' => $this->get_detail_transaksi($id)));
+			$result = array_merge($result, array('items' => $this->get_detail_transaksi($id)));	
+			
+			if($result['dikembalikan']) {
+				$result['status'] = 'Sudah Dikembalikan';				
+			} else {
+				$result['status'] = 'Belum Dikembalikan';
+				$diff = date_diff(date_create($result['jadwal_kembali']), date_create(date('Y-m-d')));
+				$terlambat = $diff->format("%r%a");
+				if($terlambat > 0) {
+					$result['status'] .= '<br><strong class="col-pink">Terlambat '.$terlambat.' hari!</strong>';
+					$result['denda'] = $this->update_denda_by_id($result['id'], $result, $terlambat);
+				}
+			}
+			
 		}
 		return $result;
 	}
 	
-	public function get_transaksi_by_pelanggan($id_pelanggan) {		
-		$result_set = $this->db->get_where($this->table, compact('id_pelanggan'));
+	public function get_all_transaksi() {
+		$transaksis = array();		
+		$this->db->select('*')->order_by('tgl_sewa', 'DESC');
+		$result_set = $this->db->get($this->table);
 		$temp_results = $result_set->result_array();
 		$results = array();
 		if(!empty($temp_results)): foreach($temp_results as $i => $res):
 			
 			$results[$i] = $res;
+			if($results[$i]['tgl_kembali'] == '0000-00-00') {
+				$results[$i]['tgl_kembali'] = '-';
+			}
+			if($res['dikembalikan']) {
+				$results[$i]['status'] = 'Sudah Dikembalikan';				
+			} else {
+				$results[$i]['status'] = 'Belum Dikembalikan';				
+				$terlambat = $this->get_keterlambatan($res['id']);
+				if($terlambat > 0) {
+					$results[$i]['status'] .= '<br><strong class="col-pink">Terlambat '.$terlambat.' hari!</strong>';
+					$results[$i]['denda'] = $this->update_denda_by_id($res['id']);
+				}
+			}
+			
+		endforeach; endif;
+		
+		return $results;
+		
+	}
+	
+	public function get_transaksi_by_pelanggan($id_pelanggan) {		
+		$result_set = $this->db->order_by('tgl_sewa', 'DESC')->get_where($this->table, compact('id_pelanggan'));
+		$temp_results = $result_set->result_array();
+		$results = array();
+		if(!empty($temp_results)): foreach($temp_results as $i => $res):
+			
+			$results[$i] = $res;
+			if($results[$i]['tgl_kembali'] == '0000-00-00') {
+				$results[$i]['tgl_kembali'] = '-';
+			}
 			if($res['dikembalikan']) {
 				$results[$i]['status'] = 'Sudah Dikembalikan';				
 			} else {
@@ -74,19 +119,20 @@ class Transaksi_model extends CI_model {
 	
 	public function get_lama_sewa($id) {
 		$transaksi = $this->get_transaksi($id);
-		$diff = date_diff(date_create($transaksi['tgl_kembali']), date_create($transaksi['tgl_sewa']));
-		return $diff->days;
+		return $transaksi['lama_sewa'];		
 	}
 	
 	public function get_keterlambatan($id) {
 		$transaksi = $this->get_transaksi($id);
-		$diff = date_diff(date_create($transaksi['tgl_kembali']), date_create(date('Y-m-d')));
+		$diff = date_diff(date_create($transaksi['jadwal_kembali']), date_create(date('Y-m-d')));
 		return $diff->format("%r%a");
 	}
 	
-	public function update_denda_by_id($id) {
-		$transaksi = $this->get_transaksi($id);
-		$terlambat = $this->get_keterlambatan($id);
+	public function update_denda_by_id($id, $transaksi = false, $terlambat = false) {
+		if(!$transaksi && !$terlambat) {
+			$transaksi = $this->get_transaksi($id);
+			$terlambat = $this->get_keterlambatan($id);
+		}
 		$denda = 0;
 		if($terlambat > 0) {
 			$denda = $terlambat * $transaksi['biaya_per_hari'];
@@ -97,10 +143,15 @@ class Transaksi_model extends CI_model {
 		return $denda;
 	}
 	
-	public function kembalikan_sewa($id) {
-		$this->db->set('dikembalikan', 1);
+	
+	public function kembalikan_sewa($id) {		
+		$dikembalikan = 1;
+		$tgl_kembali = date('Y-m-d');
+		
+		$updated_data = compact('dikembalikan', 'tgl_kembali');		
+
 		$this->db->where('id', $id);
-		$this->db->update($this->table); 
+		$this->db->update($this->table, $updated_data); 
 	}
 	
 
@@ -111,7 +162,7 @@ class Transaksi_model extends CI_model {
 		$id_produk = $this->input->post('id_produk');
 		$qty = $this->input->post('qty');
 		$tgl_sewa = date('Y-m-d');
-		$tgl_kembali = date('Y-m-d', strtotime('+'.$lama_sewa.' day'));
+		$jadwal_kembali = date('Y-m-d', strtotime('+'.$lama_sewa.' day'));
 		
 		
 		$this->load->model('Produk_model', 'Produk');
@@ -123,7 +174,7 @@ class Transaksi_model extends CI_model {
 		if($qty > $produk_disewa->ready_stock) {
 			return false;
 		} else {
-			$success_add = $this->db->insert($this->table, compact('id_pelanggan', 'tgl_sewa', 'tgl_kembali', 'biaya_per_hari', 'biaya_total', 'id_petugas'));		
+			$success_add = $this->db->insert($this->table, compact('id_pelanggan', 'tgl_sewa', 'lama_sewa', 'jadwal_kembali', 'biaya_per_hari', 'biaya_total', 'id_petugas'));		
 			if($success_add) {
 				$id_sewa = $this->db->insert_id();
 				$this->db->insert($this->table_detail_sewa, compact('id_sewa', 'id_produk', 'qty', 'biaya_per_hari'));				
@@ -135,6 +186,17 @@ class Transaksi_model extends CI_model {
 			}		
 		}		
 		
+	}
+	
+	public function update_by_id($id) {		
+		$tgl_sewa = $this->input->post('tgl_sewa');		
+		$lama_sewa = $this->input->post('lama_sewa');
+		$jadwal_kembali = date('Y-m-d', strtotime($tgl_sewa .' +'.$lama_sewa.' day'));		
+		$updated_data = compact('tgl_sewa', 'lama_sewa', 'jadwal_kembali');		
+		$success_edit = $this->db->where('id', $id)->update($this->table, $updated_data);
+		$this->update_biaya_total($id);
+		
+		return $success_edit;
 	}
 	
 	public function tambah_biaya_total($id, $biaya) {

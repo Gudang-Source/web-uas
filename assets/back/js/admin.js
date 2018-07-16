@@ -477,3 +477,16 @@ jQuery(function ($) {
 
     setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
 });
+
+
+// Date Picker
+jQuery(function ($) {
+    
+    $('.datepicker').bootstrapMaterialDatePicker({
+        format: 'YYYY-MM-DD',
+        clearButton: false,
+        weekStart: 1,
+        time: false
+    });
+   
+});

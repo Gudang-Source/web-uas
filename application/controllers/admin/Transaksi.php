@@ -17,7 +17,14 @@ class Transaksi extends CI_controller {
 	}
 
     public function index() {
+		$transaksis = $this->Transaksi->get_all_transaksi();
 		
+		$page_title = 'Semua Transaksi';
+		$active_nav = 'transaksi';
+		
+		$this->load->view('back/before', compact('page_title', 'active_nav', 'active_sub_nav'));
+		$this->load->view('back/transaksi/all', compact('transaksis'));
+		$this->load->view('back/after');
 		
     }
 	
@@ -120,6 +127,45 @@ class Transaksi extends CI_controller {
 		
 		$this->load->view('back/before', compact('page_title', 'active_nav', 'active_sub_nav'));
 		$this->load->view('back/transaksi/add', compact('pelanggan', 'produks'));
+		$this->load->view('back/after');
+		
+	}
+	
+	public function edit($id_transaksi) {
+		if(!$id_transaksi) {
+			redirect('admin/transaksi', 'refresh');
+		}
+		$transaksi = $this->Transaksi->get_transaksi($id_transaksi);
+		if(empty($transaksi)) {
+			$this->session->set_flashdata('alert', alert_error('Tidak diketemukan adanya data transaksi'));
+			redirect('admin/transaksi', 'refresh');	
+		}
+		
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			
+			$rules = $this->Transaksi->get_validation_config();
+			unset($rules['id_produk']);
+			unset($rules['qty']);
+		
+			$this->form_validation->set_rules($rules);
+			if($this->form_validation->run()) {				
+				$success_edit = $this->Transaksi->update_by_id($id_transaksi);
+				if($success_edit) {
+					$this->session->set_flashdata('alert', alert_success('Transaksi berhasil diedit'));					
+				} else {
+					$this->session->set_flashdata('alert', alert_error('Transaksi gagal diedit'));
+					var_dump($success_edit);
+					die();
+				}
+				redirect('admin/transaksi/detail/'.$id_transaksi, 'refresh');
+			}
+		}
+		
+		$page_title = 'Edit Transaksi';
+		$active_nav = 'transaksi';
+		
+		$this->load->view('back/before', compact('page_title', 'active_nav', 'active_sub_nav'));
+		$this->load->view('back/transaksi/edit', compact('transaksi'));
 		$this->load->view('back/after');
 		
 	}

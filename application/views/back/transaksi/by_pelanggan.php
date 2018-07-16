@@ -61,6 +61,7 @@
 								<tr>
 									<th>ID</th>
 									<th>Tanggal Sewa</th>
+									<th>Jadwal Dikembalikan</th>
 									<th>Tanggal Kembali</th>
 									<th>Biaya Total</th>
 									<th>Status</th>
@@ -74,6 +75,7 @@
 								<tr>
 									<td><?php echo $sewa['id']; ?></td>
 									<td><?php echo $sewa['tgl_sewa']; ?></td>
+									<td><?php echo $sewa['jadwal_kembali']; ?></td>
 									<td><?php echo $sewa['tgl_kembali']; ?></td>
 									<td><?php echo format_rupiah($sewa['biaya_total']); ?></td>
 									<td><?php echo $sewa['status'];	?>
