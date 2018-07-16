@@ -20,6 +20,6 @@ jQuery(function ($) {
         image_advtab: true
     });
     tinymce.suffix = ".min";
-    tinyMCE.baseURL = '<?php site_url(); ?>/assets/back/plugins/tinymce';
+    tinyMCE.baseURL = '<?php echo site_url(); ?>/assets/back/plugins/tinymce';
 });
 </script>
