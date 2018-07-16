@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 25, 2018 at 12:13 PM
+-- Generation Time: Jul 16, 2018 at 11:22 AM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.2.3
 
@@ -41,8 +41,10 @@ CREATE TABLE `detail_sewa` (
 --
 
 INSERT INTO `detail_sewa` (`id`, `id_sewa`, `id_produk`, `qty`, `biaya_per_hari`) VALUES
-(1, 3, 1, 2, 100000),
-(2, 3, 5, 3, 135000);
+(9, 7, 1, 3, 150000),
+(10, 8, 7, 1, 35000),
+(11, 9, 5, 1, 45000),
+(12, 9, 7, 1, 35000);
 
 -- --------------------------------------------------------
 
@@ -117,7 +119,7 @@ CREATE TABLE `pelanggan` (
 INSERT INTO `pelanggan` (`id`, `nama`, `no_identitas`, `id_identitas`, `alamat`, `no_hp`, `email`) VALUES
 (3, 'Kim Jong Un', '11343323', 13, 'Jl. Kaliurang KM 20', '08445454', 'jongun@kim.com'),
 (4, 'Tommy Winata', '13455111312', 13, 'Nitikan UH VI/223', '089922322321', 'tommy@email.com'),
-(6, 'John Meyer', '12313123123', 18, 'Jl. Naik Turun 22 Yogyakarta', '11232112313', 'ganti@email.com');
+(8, 'Andi Astono', '1232232123', 16, 'Jl. Naik Turun 22 Yogyakarta', '081772322323', 'test@wowkeren.com');
 
 -- --------------------------------------------------------
 
@@ -142,9 +144,9 @@ CREATE TABLE `produk` (
 --
 
 INSERT INTO `produk` (`id`, `nama_produk`, `description`, `total_stock`, `ready_stock`, `harga_sewa`, `foto`, `created_at`, `updated_at`) VALUES
-(1, 'Consina Magnum 4', '<p>Tenda yang sangat cocok untuk digunakan di segala medan.</p>', 6, 4, 50000, 'magnum4.jpg', '2018-06-24 20:03:09', '2018-06-25 16:28:18'),
-(5, 'Tas Deuter AirContact 45', '<p>Tas andalan di segala medan</p>', 15, 12, 45000, 'aircontact.jpg', '2018-06-24 20:59:41', '2018-06-25 16:29:49'),
-(7, 'Merapi Fire Bird', '<p>Size: (50 x 140) x 200 x 105 cm<br> Capacity: 2 Persons<br> Type: 3 Seasons<br> Construction type: Dome (inner First)<br> Flysheet Material: 190T Polyester<br> Flysheet Coating: PU 2000mm seam taped<br> Inner Fabric: 190T Polyester breathable<br> Inner Mesh: B3 no-see-um mesh<br> Floor Material: 190T Polyeste<br> Floor Coating: PU2000mm seam taped<br> Floor Size: 140 x 200 cm<br> Poles Material: 7001 T6 Aluminum<br> Poles Size: Diameter 7.9mm<br> Poles Quantity: 2 set poles<br> Pegs Material: Steel Pegs<br> Pegs Quantity: 6 pcs<br> Guyrope: Diameter 3mm no reflective<br> Packing size: 47 x 12 x 12 cm<br> Total weight: 1,7 kg<br> Foot Print Material: 190T Polyester<br> Foot Print Coating: PU3000mm seam taped<br> Vestibule size: 200 x (diameter 50 cm)<br> Vestibule Quantity: 1 vestibule<br> Tent Door: 1 door<br> Door Layers: 1 (half fabric & Half mesh)<br> Tent Ventilation: 1 ventilation<br> Tent Height: 105 cm</p>', 6, 6, 35000, 'fire-bird1.jpg', '2018-06-24 21:09:56', '2018-06-25 15:09:06');
+(1, 'Consina Magnum 4', '<p>Tenda yang sangat cocok untuk digunakan di segala medan.</p>', 6, 3, 50000, 'magnum4.jpg', '2018-06-24 20:03:09', '2018-07-16 12:41:16'),
+(5, 'Tas Deuter AirContact 45', '<p>Tas andalan di segala medan</p>', 15, 14, 45000, 'aircontact.jpg', '2018-06-24 20:59:41', '2018-07-16 16:15:39'),
+(7, 'Merapi Fire Bird', '<p>Size: (50 x 140) x 200 x 105 cm<br> Capacity: 2 Persons<br> Type: 3 Seasons<br> Construction type: Dome (inner First)<br> Flysheet Material: 190T Polyester<br> Flysheet Coating: PU 2000mm seam taped<br> Inner Fabric: 190T Polyester breathable<br> Inner Mesh: B3 no-see-um mesh<br> Floor Material: 190T Polyeste<br> Floor Coating: PU2000mm seam taped<br> Floor Size: 140 x 200 cm<br> Poles Material: 7001 T6 Aluminum<br> Poles Size: Diameter 7.9mm<br> Poles Quantity: 2 set poles<br> Pegs Material: Steel Pegs<br> Pegs Quantity: 6 pcs<br> Guyrope: Diameter 3mm no reflective<br> Packing size: 47 x 12 x 12 cm<br> Total weight: 1,7 kg<br> Foot Print Material: 190T Polyester<br> Foot Print Coating: PU3000mm seam taped<br> Vestibule size: 200 x (diameter 50 cm)<br> Vestibule Quantity: 1 vestibule<br> Tent Door: 1 door<br> Door Layers: 1 (half fabric & Half mesh)<br> Tent Ventilation: 1 ventilation<br> Tent Height: 105 cm</p>', 6, 4, 35000, 'fire-bird1.jpg', '2018-06-24 21:09:56', '2018-07-16 16:15:48');
 
 -- --------------------------------------------------------
 
@@ -178,7 +180,9 @@ CREATE TABLE `sewa` (
   `id` int(11) NOT NULL,
   `id_pelanggan` int(11) NOT NULL DEFAULT '0',
   `tgl_sewa` date NOT NULL,
+  `jadwal_kembali` date NOT NULL,
   `tgl_kembali` date NOT NULL,
+  `lama_sewa` int(4) NOT NULL DEFAULT '0',
   `biaya_per_hari` int(9) NOT NULL,
   `biaya_total` int(9) NOT NULL,
   `dikembalikan` tinyint(1) NOT NULL DEFAULT '0',
@@ -190,8 +194,10 @@ CREATE TABLE `sewa` (
 -- Dumping data for table `sewa`
 --
 
-INSERT INTO `sewa` (`id`, `id_pelanggan`, `tgl_sewa`, `tgl_kembali`, `biaya_per_hari`, `biaya_total`, `dikembalikan`, `denda`, `id_petugas`) VALUES
-(3, 3, '2018-06-25', '2018-06-27', 150000, 470000, 0, 0, 1);
+INSERT INTO `sewa` (`id`, `id_pelanggan`, `tgl_sewa`, `jadwal_kembali`, `tgl_kembali`, `lama_sewa`, `biaya_per_hari`, `biaya_total`, `dikembalikan`, `denda`, `id_petugas`) VALUES
+(7, 4, '2018-07-14', '2018-07-17', '2018-07-16', 3, 150000, 450000, 1, 0, 1),
+(8, 4, '2018-06-15', '2018-07-15', '2018-07-16', 30, 35000, 1050000, 1, 35000, 1),
+(9, 8, '2018-07-16', '2018-07-26', '0000-00-00', 10, 45000, 800000, 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -245,8 +251,8 @@ INSERT INTO `user_role` (`id_role`, `nama_role`) VALUES
 --
 ALTER TABLE `detail_sewa`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_detail_sewa_sewa` (`id_sewa`),
-  ADD KEY `FK_detail_sewa_produk` (`id_produk`);
+  ADD KEY `FK_detail_sewa_produk` (`id_produk`),
+  ADD KEY `id_sewa` (`id_sewa`);
 
 --
 -- Indexes for table `identitas`
@@ -288,8 +294,8 @@ ALTER TABLE `produk_to_kategori`
 --
 ALTER TABLE `sewa`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_sewa_pelanggan` (`id_pelanggan`),
-  ADD KEY `FK_sewa_user` (`id_petugas`);
+  ADD KEY `FK_sewa_user` (`id_petugas`),
+  ADD KEY `id_pelanggan` (`id_pelanggan`);
 
 --
 -- Indexes for table `user`
@@ -314,43 +320,43 @@ ALTER TABLE `user_role`
 -- AUTO_INCREMENT for table `detail_sewa`
 --
 ALTER TABLE `detail_sewa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `identitas`
 --
 ALTER TABLE `identitas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `kategori`
 --
 ALTER TABLE `kategori`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `pelanggan`
 --
 ALTER TABLE `pelanggan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `produk`
 --
 ALTER TABLE `produk`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `sewa`
 --
 ALTER TABLE `sewa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user_role`
@@ -367,7 +373,7 @@ ALTER TABLE `user_role`
 --
 ALTER TABLE `detail_sewa`
   ADD CONSTRAINT `FK_detail_sewa_produk` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id`),
-  ADD CONSTRAINT `FK_detail_sewa_sewa` FOREIGN KEY (`id_sewa`) REFERENCES `sewa` (`id`);
+  ADD CONSTRAINT `detail_sewa_ibfk_1` FOREIGN KEY (`id_sewa`) REFERENCES `sewa` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `pelanggan`
@@ -386,8 +392,8 @@ ALTER TABLE `produk_to_kategori`
 -- Constraints for table `sewa`
 --
 ALTER TABLE `sewa`
-  ADD CONSTRAINT `FK_sewa_pelanggan` FOREIGN KEY (`id_pelanggan`) REFERENCES `pelanggan` (`id`),
-  ADD CONSTRAINT `FK_sewa_user` FOREIGN KEY (`id_petugas`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_sewa_user` FOREIGN KEY (`id_petugas`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `sewa_ibfk_1` FOREIGN KEY (`id_pelanggan`) REFERENCES `pelanggan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `user`
